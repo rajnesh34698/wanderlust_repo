@@ -34,7 +34,7 @@ const flash=require("connect-flash");
 
 const passport=require("passport");
 const localStrategy=require("passport-local");
-const User=require("./'models/user.js");
+const User=require("./models/user.js");
 
 
 
@@ -73,7 +73,7 @@ app.use(passport.session());
 passport.use(new localStrategy(User.authenticate()));
 
 passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.deserializeUser(User.deserializeUser());0
 
 
 
@@ -82,6 +82,16 @@ app.use((req,res,next)=>{
   res.locals.error=req.flash("error");
   //console.log(res.locals.success);
   next();
+});
+
+
+app.get("/demouser",async(req,res)=>{
+  let fakeUser=new User({
+    email:"student@gmail.com",
+    username:"delta-student"
+  });
+  let registeredUser=await User.register(fakeUser,"helloworld");
+  res.send(registeredUser);
 });
 
 app.use("/listings",listings);
