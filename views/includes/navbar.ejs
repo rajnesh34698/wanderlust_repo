@@ -15,6 +15,15 @@
           <a class="nav-link " href="/listings">All Listings</a>
           <a class="nav-link " href="/listings/new">Add New Listing</a>
         </div>
+        <div class="navbar-nav">
+          <% if(!currUser){ %>
+            <a class="nav-link "  href="/signup">Sigh Up</a><!--yaha active class aur add karne se sara anchors dark ho jayenge par agar keval hover par hi dark rakhna hai to -->
+          <a class="nav-link " href="/login">Log In</a>
+          <% } %>
+          <% if(currUser){ %>
+          <a class="nav-link " href="/logout">Log Out</a>
+          <% } %>
+        </div>
       </div>
     </div>
   </nav>

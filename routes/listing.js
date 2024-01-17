@@ -25,7 +25,6 @@ router.get("/",wrapAsync(async (req,res,next)=>{
    //New Route
    router.get("/new",isLoggedIn,(req,res,next)=>{
     try {
-      console.log(req.user);
      res.render("listings/new.ejs");
     } catch (err) {
      next(err);
