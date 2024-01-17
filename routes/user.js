@@ -14,11 +14,16 @@ router.post("/signup",wrapAsync(async(req,res,next)=>{
     let{username,email,password}=req.body;
     const newUser=new User({email,username});
     const registeredUser=await User.register(newUser,password);
+    req.login(registeredUser,(err)=>{
+        if (err){
+         return next(err);
+        }
+        req.flash("success","New User registered successfully");
+        res.redirect("/listings");
+    });
     //console.log(registeredUser);
-    req.flash("success","New User registered successfully");
-    res.redirect("/listings");
    } catch (err) {
-    req.flash("error",e.message);
+    req.flash("error",err.message);
     res.redirect("/signup");
    };
 }));
