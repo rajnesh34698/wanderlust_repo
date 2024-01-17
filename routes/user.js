@@ -18,7 +18,7 @@ router.post("/signup",wrapAsync(async(req,res,next)=>{
         if (err){
          return next(err);
         }
-        req.flash("success","New User registered successfully");
+        req.flash("success"," Welcome to Wanderlust");
         res.redirect("/listings");
     });
     //console.log(registeredUser);
