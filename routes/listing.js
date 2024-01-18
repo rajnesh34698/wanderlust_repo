@@ -4,17 +4,9 @@ const wrapAsync=require("../utils/wrapAsync.js");
 const {listingSchema}=require("../schema.js");
 const ExpressError=require("../utils/ExpressError.js");
 const Listing=require("../models/listing.js");
- const {isLoggedIn}=require("../middleware.js");
+ const {isLoggedIn, isOwner,validateListing}=require("../middleware.js");
 
-//const validateListing=(req,res,next)=>{
-//    let{error}=listingSchema.validate(req.body);
-//    if(error){
-//      let errMsg=error.details.map((el)=>{el.message}).join(",");
-//      throw new ExpressError(400,error);
-//    }else{
-//      next();
-//    }
-//  }
+
 
 
 //index route
@@ -42,7 +34,7 @@ router.get("/",wrapAsync(async (req,res,next)=>{
    }));
    
    //Create Route
-   router.post("/",isLoggedIn,wrapAsync(async(req,res,next)=>{
+   router.post("/",isLoggedIn,validateListing,wrapAsync(async(req,res,next)=>{
        //let result=listingSchema.validate(req.body); // yah code joi use kiya to hi likha hai+niche ki teen line bhi
        //if(result.error){
        //  throw new ExpressError(400,result.error);
@@ -59,7 +51,7 @@ router.get("/",wrapAsync(async (req,res,next)=>{
      res.redirect("/listings");
    }));
    //Edit Route
-   router.get("/:id/edit",isLoggedIn,wrapAsync(async(req,res,next)=>{
+   router.get("/:id/edit",isLoggedIn,isOwner,wrapAsync(async(req,res,next)=>{
      let {id}=req.params;
      let listing=await Listing.findById(id);
      if(!listing){
@@ -69,19 +61,15 @@ router.get("/",wrapAsync(async (req,res,next)=>{
      res.render("listings/edit.ejs",{listing});
    }));
    //update route
-   router.put("/:id",isLoggedIn,wrapAsync(async(req,res,next)=>{
+   router.put("/:id",isLoggedIn,isOwner,validateListing,wrapAsync(async(req,res,next)=>{
      let {id}=req.params;
-     let listing=req.body.listing;
-     if(!listing){
-       throw new ExpressError(400,"validation failed");
-     };
-     console.log(listing);
-     await Listing.findById(id);
-     if(!listing.owner._id.equals(res.locals.currUser._id)){
-      req.flash("error","you don't have permission to edit");
-      return res.redirect(`/listings/${id}`);
-     }
-     Listing.findByIdAndUpdate(id,{...req.body.listing},{runValidators:true,new:true});
+     //let listing=req.body.listing;
+     //if(!listing){
+     //  throw new ExpressError(400,"validation failed");
+     //}; vaise hi schema me joi ki help se validation laga rakha hai to iski jarurat nahi
+     //console.log(listing);
+     
+     await Listing.findByIdAndUpdate(id,{...req.body.listing},{runValidators:true,new:true});
      //the above statement can also be executed through destructuring
      //await Listing.findByIdAndUpdate(id,{...listing},{runValidators:true,new:true});
      req.flash("success","Listing Updated");
@@ -89,7 +77,7 @@ router.get("/",wrapAsync(async (req,res,next)=>{
      
    }));
    //delete route
-   router.delete("/:id",isLoggedIn,wrapAsync(async(req,res,next)=>{
+   router.delete("/:id",isLoggedIn,isOwner,wrapAsync(async(req,res,next)=>{
      let {id}=req.params;
      await Listing.findByIdAndDelete(id);
      req.flash("success","Listing Deleted");

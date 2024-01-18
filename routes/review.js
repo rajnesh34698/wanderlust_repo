@@ -5,17 +5,8 @@ const {reviewSchema}=require("../schema.js");
 const Review=require("../models/review.js");
 const Listing=require("../models/listing.js");
 const ExpressError=require("../utils/ExpressError.js");
-//const validateReview=(req,res,next)=>{
-//    console.log(req.body);
-//    +console.log(reviewSchema.validate(req.body));
-    //let{error}=reviewSchema.validate(req.body);
-    //console.log(error);
-    //if(error){
-    //  throw new ExpressError(400,error);
-    //}else{
-    //  next();
-   // }
-  //}
+const {validateReview}=require("../middleware.js");
+
   
 
 //Review 
