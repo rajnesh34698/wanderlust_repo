@@ -25,7 +25,15 @@ router.get("/",wrapAsync(async (req,res,next)=>{
    //specific listing show route
    router.get("/:id",wrapAsync(async(req,res,next)=>{
      let {id}=req.params;
-     const listing=await Listing.findById(id).populate("reviews").populate("owner");
+     const listing=await Listing.findById(id)
+     .populate({
+      path:"reviews",
+      populate:{
+        path:"author",
+      }
+     })
+     .populate("owner");
+     //ye upar vale populate listing se hi associate hai
      if(!listing){
       req.flash("error","Listing you requested for does not exist");
       res.redirect("/listings");
