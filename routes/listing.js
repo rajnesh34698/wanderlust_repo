@@ -76,7 +76,12 @@ router.get("/",wrapAsync(async (req,res,next)=>{
        throw new ExpressError(400,"validation failed");
      };
      console.log(listing);
-     await Listing.findByIdAndUpdate(id,listing,{runValidators:true,new:true});
+     await Listing.findById(id);
+     if(!listing.owner._id.equals(res.locals.currUser._id)){
+      req.flash("error","you don't have permission to edit");
+      return res.redirect(`/listings/${id}`);
+     }
+     Listing.findByIdAndUpdate(id,{...req.body.listing},{runValidators:true,new:true});
      //the above statement can also be executed through destructuring
      //await Listing.findByIdAndUpdate(id,{...listing},{runValidators:true,new:true});
      req.flash("success","Listing Updated");
