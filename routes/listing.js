@@ -6,88 +6,24 @@ const ExpressError=require("../utils/ExpressError.js");
 const Listing=require("../models/listing.js");
  const {isLoggedIn, isOwner,validateListing}=require("../middleware.js");
 
-const listingController=require("../controllers/listing.js");
+const listingController=require("../controllers/listings.js");
 
 
 //index route
 router.get("/",wrapAsync(listingController.index));
    //New Route
-   router.get("/new",isLoggedIn,(req,res,next)=>{
-    try {
-     res.render("listings/new.ejs");
-    } catch (err) {
-     next(err);
-    } 
-   });
+   router.get("/new",isLoggedIn,listingController.renderNewForm);
    //specific listing show route
-   router.get("/:id",wrapAsync(async(req,res,next)=>{
-     let {id}=req.params;
-     const listing=await Listing.findById(id)
-     .populate({
-      path:"reviews",
-      populate:{
-        path:"author",
-      }
-     })
-     .populate("owner");
-     //ye upar vale populate listing se hi associate hai
-     if(!listing){
-      req.flash("error","Listing you requested for does not exist");
-      res.redirect("/listings");
-     }
-     res.render("listings/show.ejs",{listing});
-   }));
+   router.get("/:id",wrapAsync(listingController.showListing));
    
    //Create Route
-   router.post("/",isLoggedIn,validateListing,wrapAsync(async(req,res,next)=>{
-       //let result=listingSchema.validate(req.body); // yah code joi use kiya to hi likha hai+niche ki teen line bhi
-       //if(result.error){
-       //  throw new ExpressError(400,result.error);
-      // }
-       //console.log(result);
-       let listing=req.body.listing;//listing ek object aayi hai print kara ke check kar sakte hai
-       // if(!listing){
-       //  throw new ExpressError(400,"validation failed");
-       // } ab iska kaam joi kar raha hai jiska code schema.js me likha hai  
-       let listing1=new Listing(listing);
-       listing1.owner=req.user._id;
-     await listing1.save();
-     req.flash("success","New Listing Created");
-     res.redirect("/listings");
-   }));
+   router.post("/",isLoggedIn,validateListing,wrapAsync(listingController.createListing));
    //Edit Route
-   router.get("/:id/edit",isLoggedIn,isOwner,wrapAsync(async(req,res,next)=>{
-     let {id}=req.params;
-     let listing=await Listing.findById(id);
-     if(!listing){
-      req.flash("error","Listing you requested for does not exist");
-      res.redirect("/listings");
-     }
-     res.render("listings/edit.ejs",{listing});
-   }));
+   router.get("/:id/edit",isLoggedIn,isOwner,wrapAsync(listingController.renderEditForm));
    //update route
-   router.put("/:id",isLoggedIn,isOwner,validateListing,wrapAsync(async(req,res,next)=>{
-     let {id}=req.params;
-     //let listing=req.body.listing;
-     //if(!listing){
-     //  throw new ExpressError(400,"validation failed");
-     //}; vaise hi schema me joi ki help se validation laga rakha hai to iski jarurat nahi
-     //console.log(listing);
-     
-     await Listing.findByIdAndUpdate(id,{...req.body.listing},{runValidators:true,new:true});
-     //the above statement can also be executed through destructuring
-     //await Listing.findByIdAndUpdate(id,{...listing},{runValidators:true,new:true});
-     req.flash("success","Listing Updated");
-     res.redirect(`/listings/${id}`);
-     
-   }));
+   router.put("/:id",isLoggedIn,isOwner,validateListing,wrapAsync(listingController.updateListing));
    //delete route
-   router.delete("/:id",isLoggedIn,isOwner,wrapAsync(async(req,res,next)=>{
-     let {id}=req.params;
-     await Listing.findByIdAndDelete(id);
-     req.flash("success","Listing Deleted");
-    res.redirect("/listings");
-   }));
+   router.delete("/:id",isLoggedIn,isOwner,wrapAsync(listingController.destroyListing));
   
 
    module.exports=router;
