@@ -32,6 +32,8 @@ module.exports.showListing=async(req,res,next)=>{
   }
 
   module.exports.createListing=async(req,res,next)=>{
+    let url=req.file.path;
+    let filename=req.file.filename;
     //let result=listingSchema.validate(req.body); // yah code joi use kiya to hi likha hai+niche ki teen line bhi
     //if(result.error){
     //  throw new ExpressError(400,result.error);
@@ -43,6 +45,7 @@ module.exports.showListing=async(req,res,next)=>{
     // } ab iska kaam joi kar raha hai jiska code schema.js me likha hai  
     let listing1=new Listing(listing);
     listing1.owner=req.user._id;
+    listing1.image={url,filename};
   await listing1.save();
   req.flash("success","New Listing Created");
   res.redirect("/listings");

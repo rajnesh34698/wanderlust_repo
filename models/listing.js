@@ -13,10 +13,12 @@ const listingSchema=new Schema({
        // required:true,
     },
     image:{
-        type:Object,
+        
         //default:"default link",
         //set:(v)=>v===""?"default link":v,
        // required:true,
+       url:String,
+       filename:String,
     },
     price:Number,
     location:String,
