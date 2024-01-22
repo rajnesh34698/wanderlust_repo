@@ -7,7 +7,11 @@ const listingSchema=Joi.object({
         location:Joi.string().required(),
         country:Joi.string().required(),
         price:Joi.number().required().min(0),
-        image:Joi.string().allow("",null)
+        //image:Joi.string().allow("",null)
+        image:Joi.object({
+            url:Joi.string().required(),
+            filename:Joi.string().required(),
+        }).required()
     }).required() //matlab sabkuch khali data enter kar diya to error message aayega ki listing is required matlab listing karne aaye aur vo hi nahi ki
 });
 
