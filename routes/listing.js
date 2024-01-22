@@ -10,7 +10,10 @@ const listingController=require("../controllers/listings.js");
 
 
 const multer  = require('multer')
-const upload = multer({ dest: "E:/New folder"})
+const {storage}=require("../cloudConfig.js")
+const upload = multer({storage})
+
+
 
 
 
