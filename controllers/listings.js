@@ -62,6 +62,7 @@ module.exports.renderEditForm=async(req,res,next)=>{
   }
 
   module.exports.updateListing=async(req,res,next)=>{
+  
     let {id}=req.params;
     //let listing=req.body.listing;
     //if(!listing){
@@ -69,7 +70,13 @@ module.exports.renderEditForm=async(req,res,next)=>{
     //}; vaise hi schema me joi ki help se validation laga rakha hai to iski jarurat nahi
     //console.log(listing);
     
-    await Listing.findByIdAndUpdate(id,{...req.body.listing},{runValidators:true,new:true});
+    let listing=await Listing.findByIdAndUpdate(id,{...req.body.listing},{runValidators:true,new:true});
+    if(typeof req.file!=="undefined"){
+    let url=req.file.path;
+    let filename=req.file.filename;
+    listing.image={url,filename};
+    await listing.save();
+    }
     //the above statement can also be executed through destructuring
     //await Listing.findByIdAndUpdate(id,{...listing},{runValidators:true,new:true});
     req.flash("success","Listing Updated");
