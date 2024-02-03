@@ -78,3 +78,7 @@ body{
 .show-img{
     height:30vh;
 }
+/*navbar*/
+.nav-link{
+    margin-right: 0px;
+}

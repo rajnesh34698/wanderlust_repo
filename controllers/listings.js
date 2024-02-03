@@ -59,7 +59,7 @@ module.exports.renderEditForm=async(req,res,next)=>{
      res.redirect("/listings");
     }
     let originalImageUrl=listing.image.url;
-    let imageUrl= originalImageUrl.replace("/upload","/upload/h_300,w_250")
+    let imageUrl= originalImageUrl.replace("/upload","/upload/e_unsharp_mask,h_300,w_250")
     res.render("listings/edit.ejs",{listing,imageUrl});
   }
 
