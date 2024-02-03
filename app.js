@@ -68,9 +68,7 @@ const sessionOptions={
     maxAge:7*24*60*60*1000,
   }
 };
-app.get("/",(req,res)=>{
-  res.send("Hi,I am root");
-});
+
 
 
 app.use(session(sessionOptions));
