@@ -17,7 +17,8 @@ body{
     color:#fe424d;
 }
 .nav-link{
-    color:#222222
+    color:#222222;
+    margin-right: 0px !important;
 }
 /*Footer*/
 .f-info-links a{
@@ -77,8 +78,4 @@ body{
 /*Show page*/
 .show-img{
     height:30vh;
-}
-/*navbar*/
-.nav-link{
-    margin-right: 0px;
 }
