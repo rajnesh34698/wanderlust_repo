@@ -122,6 +122,9 @@ app.use("/listings",listingRouter);
 app.use("/listings/:id/reviews",reviewRouter);
 app.use("/",userRouter);
 
+app.get("/about",(req,res)=>{
+  res.render("about.ejs");
+});
 
 app.all("*",(req,res,next)=>{
   next(new ExpressError(404,"Page not found"));
