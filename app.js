@@ -127,7 +127,8 @@ app.get("/about",(req,res)=>{
 });
 
 app.all("*",(req,res,next)=>{
-  next(new ExpressError(404,"Page not found"));
+  res.render("about.ejs");
+  //next(new ExpressError(404,"Page not found"));
 });
 
 app.use((err,req,res,next)=>{
